@@ -59,9 +59,10 @@ export function SiteHeader() {
   );
 
   const mobileNavClasses = cn(
+    "px-4 py-3 transition-all duration-500",
     isHome
-      ? "px-4 py-3 transition-all duration-500 data-[visible=true]:border data-[visible=true]:border-[var(--border)]/70 data-[visible=true]:bg-white/90"
-      : "px-4 py-3 border border-[var(--border)]/70 bg-white/95",
+      ? "group text-white data-[visible=true]:border data-[visible=true]:border-[var(--border)]/70 data-[visible=true]:bg-white/90 data-[visible=true]:text-[var(--foreground)]"
+      : "group border border-[var(--border)]/70 bg-white/95 text-[var(--foreground)]",
   );
 
   const locationTextClasses = cn(
@@ -77,8 +78,15 @@ export function SiteHeader() {
   );
 
   const mobileBagButtonClasses = cn(
-    "relative flex h-10 w-10 items-center justify-center rounded-full border",
-    isHome ? "border-white/40 bg-white/10 text-white" : "border-[var(--border)] text-[var(--primary)]",
+    "group relative flex h-10 w-10 items-center justify-center rounded-full border transition-colors",
+    isHome
+      ? "border-white/60 bg-white/10 text-white group-data-[visible=true]:border-[var(--border)] group-data-[visible=true]:bg-white group-data-[visible=true]:text-[var(--primary)]"
+      : "border-[var(--border)] bg-white text-[var(--primary)]",
+  );
+
+  const mobileToggleClasses = cn(
+    "transition-colors",
+    isHome ? "text-white group-data-[visible=true]:text-[var(--foreground)]" : "text-[var(--foreground)]",
   );
 
   return (
@@ -148,7 +156,7 @@ export function SiteHeader() {
       </NavBody>
       <MobileNav className={mobileNavClasses}>
         <MobileNavHeader>
-          <Link href="/" className="flex items-center gap-3 text-[var(--primary)]">
+          <Link href="/" className="flex items-center gap-3 text-current">
             <Image src="/logo.webp" alt="Anfa logo" width={36} height={36} className="h-9 w-9 object-contain" priority />
             <span className="text-xs uppercase tracking-[0.35em]">Anfa</span>
           </Link>
@@ -161,12 +169,19 @@ export function SiteHeader() {
               <BagIcon size={18} />
               <Badge
                 variant="secondary"
-                className="pointer-events-none absolute -right-1 -top-1 border-white bg-[var(--primary)] text-[10px] text-white"
+                className={cn(
+                  "pointer-events-none absolute -right-1 -top-1 border-white bg-[var(--primary)] text-[10px] text-white",
+                  isHome && "group-data-[visible=true]:border-[var(--primary)]",
+                )}
               >
                 {bagCount}
               </Badge>
             </Link>
-            <MobileNavToggle isOpen={mobileOpen} onClick={() => setMobileOpen((prev) => !prev)} />
+            <MobileNavToggle
+              className={mobileToggleClasses}
+              isOpen={mobileOpen}
+              onClick={() => setMobileOpen((prev) => !prev)}
+            />
           </div>
         </MobileNavHeader>
         <MobileNavMenu isOpen={mobileOpen} className="gap-2">

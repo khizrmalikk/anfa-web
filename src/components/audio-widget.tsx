@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 
 const YOUTUBE_VIDEO_ID = "6MAzUT1YhWE"; // provided playlist/track ID
 const YT_SCRIPT_ID = "youtube-iframe-api";
@@ -16,6 +16,7 @@ type YTPlayer = {
   isMuted: () => boolean;
   setVolume?: (volume: number) => void;
   getVolume?: () => number;
+  getPlayerState?: () => number;
 };
 
 type YTNamespace = {
@@ -70,13 +71,9 @@ export function AudioWidget() {
     if (!window.__anfaAudioStore) return;
     const playerState = window.YT?.PlayerState;
     if (!playerState) return;
-    if (event.data === playerState.PLAYING) {
-      setIsPlaying(true);
-      window.__anfaAudioStore.isPlaying = true;
-    } else if (event.data === playerState.PAUSED || event.data === playerState.ENDED) {
-      setIsPlaying(false);
-      window.__anfaAudioStore.isPlaying = false;
-    }
+    const isActive = event.data === playerState.PLAYING;
+    setIsPlaying(isActive);
+    window.__anfaAudioStore.isPlaying = isActive;
   }, []);
 
   const initPlayer = useCallback(
@@ -98,26 +95,37 @@ export function AudioWidget() {
           onReady: () => {
             setReady(true);
             playerRef.current?.setVolume?.(60);
-            const muted = playerRef.current?.isMuted?.() ?? false;
-            setIsMuted(muted);
+            playerRef.current?.unMute?.();
+            setIsMuted(false);
             if (!window.__anfaAudioStore) {
               window.__anfaAudioStore = {
                 player: playerRef.current,
                 ready: true,
                 isPlaying: false,
-                isMuted: muted,
+                isMuted: false,
                 initializing: false,
               };
             } else {
               window.__anfaAudioStore.player = playerRef.current;
               window.__anfaAudioStore.ready = true;
-              window.__anfaAudioStore.isMuted = muted;
+              window.__anfaAudioStore.isMuted = false;
               window.__anfaAudioStore.initializing = false;
             }
             if (!autoplayAttempted) {
               setAutoplayAttempted(true);
-              setTimeout(() => {
-                playerRef.current?.playVideo();
+              const startPlayback = () => playerRef.current?.playVideo();
+              window.setTimeout(() => {
+                startPlayback();
+                window.setTimeout(() => {
+                  const playerState = playerRef.current?.getPlayerState?.();
+                  const ytState = window.YT?.PlayerState;
+                  if (playerState !== ytState?.PLAYING) {
+                    playerRef.current?.mute?.();
+                    setIsMuted(true);
+                    if (window.__anfaAudioStore) window.__anfaAudioStore.isMuted = true;
+                    playerRef.current?.playVideo();
+                  }
+                }, 1200);
               }, 200);
             }
           },
@@ -196,17 +204,6 @@ export function AudioWidget() {
     };
   }, [initPlayer]);
 
-  const togglePlayback = () => {
-    if (!ready || !playerRef.current) return;
-    if (isPlaying) {
-      playerRef.current.pauseVideo();
-      if (window.__anfaAudioStore) window.__anfaAudioStore.isPlaying = false;
-    } else {
-      playerRef.current.playVideo();
-      if (window.__anfaAudioStore) window.__anfaAudioStore.isPlaying = true;
-    }
-  };
-
   const toggleMute = () => {
     if (!ready || !playerRef.current) return;
     if (isMuted) {
@@ -245,15 +242,12 @@ export function AudioWidget() {
   return (
     <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col items-end space-y-2 text-[var(--foreground)]">
       <div className="pointer-events-auto flex items-center gap-4 rounded-full border border-[var(--border)] bg-white/95 px-5 py-2 shadow-2xl">
-        <button
-          type="button"
-          onClick={togglePlayback}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--primary)] text-white"
-          disabled={!ready}
-          aria-label={isPlaying ? "Pause audio" : "Play audio"}
-        >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-        </button>
+        <div className="flex flex-col text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+          <span className="text-[var(--foreground)]">Audio</span>
+          <span className="text-[9px] tracking-[0.4em] text-[#a78a6e]">
+            {ready && isPlaying ? (isMuted ? "Muted" : "Playing") : "Starting"}
+          </span>
+        </div>
         <SoundBars values={barHeights} />
         <button
           type="button"

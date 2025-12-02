@@ -7,10 +7,13 @@ const processHighlights = [
   {
     title: "REVOLUTIONARY WEAR",
     body: "Innovative pieces designed to embody the relaxed urban culture the UAE has to offer.",
+    image:
+      "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80",
   },
   {
     title: "OUR PROCESS",
     body: "All of our items are designed and handcrafted in the UAE. We use local manufacturers and source material native to the region.",
+    image: "/label.webp",
   },
 ];
 
@@ -168,20 +171,17 @@ export default function Home() {
               key={item.title}
               className="overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_8px_20px_rgba(15,9,3,0.06)]"
             >
-              <div className="relative aspect-[5/7] max-h-[300px]">
+              <div className="relative aspect-[4/5] max-h-[260px] overflow-hidden md:aspect-[5/6] md:max-h-[300px]">
                 <Image
-                  src={
-                    index === 0
-                      ? "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=900&q=80"
-                      : "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80"
-                  }
+                  src={item.image}
                   alt={item.title}
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
                   sizes="(max-width: 1024px) 100vw, 520px"
+                  priority={index === 1}
                 />
               </div>
-              <div className="space-y-2 px-5 py-4 text-[#4f3c27]">
+            <div className="space-y-2 px-5 py-3 text-[#4f3c27]">
                 <p className="text-[11px] uppercase tracking-[0.4em] text-[#a78a6e]">{item.title}</p>
                 <p className="text-sm leading-relaxed">{item.body}</p>
               </div>
