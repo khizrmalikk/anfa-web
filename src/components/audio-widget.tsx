@@ -8,12 +8,43 @@ const YT_SCRIPT_ID = "youtube-iframe-api";
 const HOST_ID = "anfa-youtube-audio-host";
 const BAR_COUNT = 6;
 
+type YTPlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  mute: () => void;
+  unMute: () => void;
+  isMuted: () => boolean;
+  setVolume?: (volume: number) => void;
+  getVolume?: () => number;
+};
+
+type YTNamespace = {
+  Player: new (
+    element: string | HTMLElement,
+    options: {
+      videoId: string;
+      height?: string;
+      width?: string;
+      playerVars?: Record<string, string | number | boolean | undefined>;
+      events?: {
+        onReady?: () => void;
+        onStateChange?: (event: { data: number }) => void;
+      };
+    },
+  ) => YTPlayer;
+  PlayerState: {
+    PLAYING: number;
+    PAUSED: number;
+    ENDED: number;
+  };
+};
+
 declare global {
   interface Window {
     onYouTubeIframeAPIReady?: () => void;
-    YT: typeof YT;
+    YT?: YTNamespace;
     __anfaAudioStore?: {
-      player: YT.Player | null;
+      player: YTPlayer | null;
       ready: boolean;
       isPlaying: boolean;
       isMuted: boolean;
@@ -23,7 +54,7 @@ declare global {
 }
 
 export function AudioWidget() {
-  const playerRef = useRef<YT.Player | null>(null);
+  const playerRef = useRef<YTPlayer | null>(null);
   const isBrowser = typeof window !== "undefined";
   const initialStore = isBrowser ? window.__anfaAudioStore : undefined;
 
@@ -35,15 +66,14 @@ export function AudioWidget() {
     Array.from({ length: BAR_COUNT }, () => 0.3),
   );
 
-  const handleStateChange = useCallback((event: YT.OnStateChangeEvent) => {
+  const handleStateChange = useCallback((event: { data: number }) => {
     if (!window.__anfaAudioStore) return;
-    if (event.data === window.YT.PlayerState.PLAYING) {
+    const playerState = window.YT?.PlayerState;
+    if (!playerState) return;
+    if (event.data === playerState.PLAYING) {
       setIsPlaying(true);
       window.__anfaAudioStore.isPlaying = true;
-    } else if (
-      event.data === window.YT.PlayerState.PAUSED ||
-      event.data === window.YT.PlayerState.ENDED
-    ) {
+    } else if (event.data === playerState.PAUSED || event.data === playerState.ENDED) {
       setIsPlaying(false);
       window.__anfaAudioStore.isPlaying = false;
     }
@@ -52,7 +82,9 @@ export function AudioWidget() {
   const initPlayer = useCallback(
     (host: HTMLDivElement) => {
       if (playerRef.current) return;
-      playerRef.current = new window.YT.Player(host, {
+      const yt = window.YT;
+      if (!yt) return;
+      playerRef.current = new yt.Player(host, {
         videoId: YOUTUBE_VIDEO_ID,
         height: "0",
         width: "0",
@@ -65,7 +97,7 @@ export function AudioWidget() {
         events: {
           onReady: () => {
             setReady(true);
-            playerRef.current?.setVolume(60);
+            playerRef.current?.setVolume?.(60);
             const muted = playerRef.current?.isMuted?.() ?? false;
             setIsMuted(muted);
             if (!window.__anfaAudioStore) {
@@ -119,7 +151,7 @@ export function AudioWidget() {
 
     const attachExistingPlayer = () => {
       if (!store.player) return;
-      playerRef.current = store.player;
+      playerRef.current = store.player as YTPlayer;
       setReady(store.ready);
       setIsMuted(store.isMuted);
       setIsPlaying(store.isPlaying);
