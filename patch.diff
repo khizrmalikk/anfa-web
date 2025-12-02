@@ -1,0 +1,52 @@
+*** Begin Patch
+*** Update File: src/components/spotify-widget.tsx
+@@
+-const SPOTIFY_URI = "spotify:episode:7makk4oTQel546B0PZlDM5";
++const SPOTIFY_URI = "spotify:episode:7makk4oTQel546B0PZlDM5";
++const PLAYER_DIMENSIONS = { width: 200, height: 260 };
+@@
+-  const containerRef = useRef<HTMLDivElement | null>(null);
++  const containerRef = useRef<HTMLDivElement | null>(null);
+@@
+-    const initialize = (api: SpotifyIframeAPI) => {
++    const initialize = (api: SpotifyIframeAPI) => {
+       if (!containerRef.current) return;
+-      api.createController(containerRef.current, { uri: SPOTIFY_URI }, () => setReady(true));
++      api.createController(
++        containerRef.current,
++        { uri: SPOTIFY_URI, ...PLAYER_DIMENSIONS },
++        () => setReady(true),
++      );
+     };
+@@
+-      {!isMinimized && (
+-        <div className="pointer-events-auto overflow-hidden rounded-3xl border border-[var(--border)] bg-white shadow-2xl">
+-          <div
+-            className="relative"
+-            id="embed-iframe"
+-            ref={containerRef}
+-            style={{ width: PLAYER_DIMENSIONS.width, height: PLAYER_DIMENSIONS.height }}
+-          />
+-          {!ready && (
+-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 text-xs uppercase tracking-[0.35em] text-[#a78a6e]">
+-              Loading…
+-            </div>
+-          )}
+-        </div>
+-      )}
++      {!isMinimized && (
++        <div className="pointer-events-auto overflow-hidden rounded-3xl border border-[var(--border)] bg-white shadow-2xl">
++          <div
++            className="relative"
++            id="embed-iframe"
++            ref={containerRef}
++            style={{ width: PLAYER_DIMENSIONS.width, height: PLAYER_DIMENSIONS.height }}
++          />
++          {!ready && (
++            <div className="absolute inset-0 flex items-center justify-center bg-white/80 text-xs uppercase tracking-[0.35em] text-[#a78a6e]">
++              Loading…
++            </div>
++          )}
++        </div>
++      )}
+*** End Patch
