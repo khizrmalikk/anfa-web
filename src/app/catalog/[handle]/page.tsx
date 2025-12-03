@@ -42,7 +42,7 @@ export default async function ProductPage({
         <div className="mt-8 grid gap-12 lg:grid-cols-2 lg:items-start">
           <ProductGallery title={product.title} images={galleryImages} />
 
-          <div className="space-y-6 rounded-3xl border border-white/15 bg-white/5 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition duration-500 hover:border-white/25 hover:bg-white/8 lg:sticky lg:top-36 lg:self-start">
+          <div className="space-y-6 rounded-3xl border border-white/15 bg-white/5 px-6 py-6 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition duration-500 hover:border-white/25 hover:bg-white/8 lg:sticky lg:top-36 lg:self-start lg:px-8 lg:py-6">
             <p className="text-xs uppercase tracking-[0.35em] text-[#d9b787]">Anfa</p>
             <div>
               <h1 className="text-4xl leading-tight text-white">{product.title}</h1>
