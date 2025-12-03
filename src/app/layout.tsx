@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 import { AudioWidget } from "@/components/audio-widget";
-import { SiteHeader } from "@/components/site-header";
+import { PageTransition } from "@/components/page-transition";
 import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 const display = Playfair_Display({
   variable: "--font-display",
@@ -63,7 +64,9 @@ export default function RootLayout({
             </div>
           </div>
           <SiteHeader />
-          <main>{children}</main>
+          <main>
+            <PageTransition>{children}</PageTransition>
+          </main>
           <SiteFooter />
           <AudioWidget />
         </div>
