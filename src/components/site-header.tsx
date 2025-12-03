@@ -92,8 +92,8 @@ export function SiteHeader() {
   return (
     <Navbar className="top-[40px] px-4">
       <NavBody className={navBodyClasses}>
-        <Link href="/" className="flex items-center gap-3 text-current">
-          <Image src="/logo.webp" alt="Anfa logo" width={44} height={44} className="h-11 w-11 object-contain" priority />
+        <Link href="/" className="flex items-center gap-4 text-current">
+          <Image src="/logo.webp" alt="Anfa logo" width={60} height={60} className="h-15 w-15 object-contain" priority />
           <div className="leading-tight">
             <p className="text-sm uppercase tracking-[0.4em]">Anfa Label</p>
             <p className={locationTextClasses}>Dubai</p>
@@ -118,7 +118,14 @@ export function SiteHeader() {
                 </Badge>
               </button>
             </PopoverTrigger>
-            <PopoverContent id={popoverContentId} align="end" className="w-80 space-y-4 text-sm">
+            <PopoverContent
+              id={popoverContentId}
+              align="end"
+              className={cn(
+                "w-80 space-y-4 rounded-[28px] border border-[var(--border)] bg-white/95 text-sm text-[var(--foreground)] shadow-[0_24px_80px_rgba(15,9,3,0.15)] backdrop-blur-xl",
+                isHome && "text-[var(--foreground)]",
+              )}
+            >
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-[#a78a6e]">
                 <span>Bag Preview</span>
                 <span>{bagCount} {bagCount === 1 ? "item" : "items"}</span>
@@ -157,7 +164,7 @@ export function SiteHeader() {
       <MobileNav className={mobileNavClasses}>
         <MobileNavHeader>
           <Link href="/" className="flex items-center gap-3 text-current">
-            <Image src="/logo.webp" alt="Anfa logo" width={36} height={36} className="h-9 w-9 object-contain" priority />
+            <Image src="/logo.webp" alt="Anfa logo" width={44} height={44} className="h-11 w-11 object-contain" priority />
             <span className="text-xs uppercase tracking-[0.35em]">Anfa</span>
           </Link>
           <div className="flex items-center gap-3">
@@ -189,7 +196,7 @@ export function SiteHeader() {
             <Link
               key={item.name}
               href={item.link}
-              className="w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm uppercase tracking-[0.35em]"
+              className="w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm uppercase tracking-[0.35em] text-current"
               onClick={handleNavClick}
             >
               {item.name}

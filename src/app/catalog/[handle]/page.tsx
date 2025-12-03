@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ProductGallery } from "@/components/product-gallery";
 import { getCatalogProducts, getProductByHandle } from "@/lib/shopify";
 import { ProductControls } from "./product-controls";
 
@@ -21,8 +22,13 @@ export default async function ProductPage({
     (item) => item.handle !== product.handle,
   ).slice(0, 3);
 
+  const galleryImages = [
+    product.image,
+    ...product.gallery.filter((image) => image.url !== product.image?.url),
+  ].filter((image): image is NonNullable<typeof image> => Boolean(image?.url));
+
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12 text-[var(--foreground)] md:px-10 lg:px-16">
+    <div className="mx-auto max-w-6xl px-6 pb-12 pt-40 text-[var(--foreground)] md:px-10 lg:px-16">
       <Link
         href="/catalog"
         className="text-xs uppercase tracking-[0.35em] text-[var(--primary)] underline"
@@ -30,33 +36,10 @@ export default async function ProductPage({
         ← Back to catalog
       </Link>
 
-      <div className="mt-8 grid gap-12 lg:grid-cols-[1.2fr,0.8fr]">
-        <div className="space-y-4">
-          <div className="relative h-[520px] w-full overflow-hidden rounded-[36px] border border-[var(--border)]">
-            <Image
-              src={product.image?.url ?? "/placeholder.png"}
-              alt={product.image?.altText ?? product.title}
-              fill
-              sizes="(max-width: 1024px) 100vw, 720px"
-              className="object-cover"
-            />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {product.gallery.slice(0, 3).map((image, idx) => (
-              <div key={idx} className="relative h-32 overflow-hidden rounded-2xl border border-[var(--border)]">
-                <Image
-                  src={image.url}
-                  alt={image.altText ?? product.title}
-                  fill
-                  sizes="180px"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="mt-8 grid gap-12 lg:grid-cols-2 lg:items-start">
+        <ProductGallery title={product.title} images={galleryImages} />
 
-        <div className="space-y-6">
+        <div className="space-y-6 lg:sticky lg:top-36 lg:self-start">
           <p className="text-xs uppercase tracking-[0.35em] text-[#a78a6e]">Anfa</p>
           <div>
             <h1 className="text-4xl leading-tight">{product.title}</h1>

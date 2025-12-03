@@ -17,22 +17,21 @@ const processHighlights = [
   },
 ];
 
-const footerLinks = [
-  { label: "Contact", href: "mailto:concierge@anfalabel.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "Journal", href: "#editorial" },
-  { label: "Shipping", href: "https://anfalabel.com/policies/shipping-policy" },
-];
-
 const featuredProducts = [
   {
-    title: "Blonde Light Weight Harrington",
-    description: "Corduroy collar, relaxed cropped silhouette, embroidered collarmark.",
-    priceLabel: "450 AED",
-    badge: "Drop 07 · Ready to ship",
-    image: { url: "/hero.webp", alt: "Blonde Light Weight Harrington" },
-    hoverImage: { url: "/Hero2.webp", alt: "Blonde Light Weight Harrington detail" },
-    href: "/catalog/contour-bustier-dress",
+    title: "Demo Gown Experience",
+    description: "Hand-draped silk column created solely to showcase the product page flow.",
+    priceLabel: "2,480 AED",
+    badge: "Demo · Limited Capsule",
+    image: {
+      url: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
+      alt: "Demo gown",
+    },
+    hoverImage: {
+      url: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
+      alt: "Demo gown detail",
+    },
+    href: "/catalog/demo-look",
   },
   {
     title: "Nomad Trouser",
@@ -81,7 +80,7 @@ export default function Home() {
           <div className="grid w-full max-w-3xl gap-8">
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="font-semibold uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(3.5rem,11vw,8rem)] text-white">
+                <h1 className="font-semibold uppercase leading-[0.85] tracking-[-0.04em] text-[clamp(8.5rem,26vw,8rem)] text-white">
                   <span className="block">{primaryHeroWord}</span>
                   {secondaryHeroLine && <span className="block">{secondaryHeroLine}</span>}
           </h1>
@@ -110,8 +109,8 @@ export default function Home() {
         <section className="mx-auto max-w-6xl space-y-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.45em] text-[#a78a6e]">Current Objects</p>
-              <h2 className="text-3xl text-[#0e0b05]">Wearable sculptures, styled three across.</h2>
+              <p className="text-xs uppercase tracking-[0.45em] text-[#a78a6e]">Current Styles</p>
+              <h2 className="text-3xl text-[#0e0b05]">Wearable sculptures.</h2>
             </div>
             <Link
               href="/catalog"
@@ -121,13 +120,52 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="-mx-4 md:hidden">
+            <div className="flex gap-4 overflow-x-auto px-4 pb-2 snap-x snap-mandatory">
+              {featuredProducts.map((product) => (
+                <div
+                  key={`mobile-${product.title}`}
+                  className="w-[78vw] flex-shrink-0 snap-center"
+                >
+                  <ProductCard {...product} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden gap-6 md:grid md:grid-cols-3">
             {featuredProducts.map((product) => (
               <ProductCard key={product.title} {...product} />
             ))}
           </div>
         </section>
       </div>
+
+      <section className="px-6 py-8 md:px-10 lg:px-16">
+        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-2">
+          {processHighlights.map((item, index) => (
+            <article
+              key={item.title}
+              className="overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_8px_20px_rgba(15,9,3,0.06)]"
+            >
+              <div className="relative h-[260px] w-full overflow-hidden md:h-[320px]">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover object-center transition duration-700"
+                  sizes="(max-width: 768px) 100vw, 520px"
+                  priority={index === 1}
+                />
+              </div>
+              <div className="space-y-2 px-5 py-3 text-[#4f3c27]">
+                <p className="text-[11px] uppercase tracking-[0.4em] text-[#a78a6e]">{item.title}</p>
+                <p className="text-sm leading-relaxed">{item.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="relative isolate w-full overflow-hidden text-white">
         <Image
@@ -163,78 +201,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section className="px-6 py-8 md:px-10 lg:px-16">
-        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-2">
-          {processHighlights.map((item, index) => (
-            <article
-              key={item.title}
-              className="overflow-hidden rounded-[28px] border border-border bg-white shadow-[0_8px_20px_rgba(15,9,3,0.06)]"
-            >
-              <div className="relative aspect-[4/5] max-h-[260px] overflow-hidden md:aspect-[5/6] md:max-h-[300px]">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  priority={index === 1}
-                />
-              </div>
-            <div className="space-y-2 px-5 py-3 text-[#4f3c27]">
-                <p className="text-[11px] uppercase tracking-[0.4em] text-[#a78a6e]">{item.title}</p>
-                <p className="text-sm leading-relaxed">{item.body}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-
-      <footer className="mx-auto flex max-w-6xl flex-col gap-6 border-t border-border px-6 pb-12 pt-10 text-sm text-[#4f3c27] md:flex-row md:items-center md:justify-between md:px-10 lg:px-16">
-        <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.35em] text-[#a78a6e]">Anfa Label</p>
-          <p>Modern desert luxury · Designed in Dubai · Data via Shop API.</p>
-          <div className="flex items-center gap-3 text-[var(--primary)]">
-            <a
-              href="https://instagram.com"
-            target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              className="rounded-full border border-[var(--border)] px-3 py-1 text-xs uppercase tracking-[0.4em]"
-            >
-              IG
-          </a>
-          <a
-              href="https://tiktok.com"
-            target="_blank"
-              rel="noreferrer"
-              aria-label="TikTok"
-              className="rounded-full border border-[var(--border)] px-3 py-1 text-xs uppercase tracking-[0.4em]"
-            >
-              TT
-            </a>
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 text-sm md:flex-row md:items-center">
-          <label className="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-[#a78a6e]">
-            Region & Currency
-            <select className="rounded-full border border-[var(--border)] px-4 py-2 text-sm">
-              <option>UAE · AED</option>
-              <option>USA · USD</option>
-              <option>EU · EUR</option>
-              <option>UK · GBP</option>
-            </select>
-          </label>
-          <div className="flex flex-wrap gap-4 text-sm font-medium text-primary">
-            {footerLinks.map((link) => (
-              <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -30,12 +30,10 @@ export function ProductCard({
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col overflow-hidden rounded-[40px] border border-[var(--border)] bg-white shadow-[0_20px_70px_rgba(15,9,3,0.08)] transition duration-500 hover:-translate-y-1"
+      className="group relative block overflow-hidden border border-[var(--border)] bg-black/5 shadow-[0_14px_50px_rgba(15,9,3,0.12)] transition duration-500 hover:-translate-y-1"
+      style={{ aspectRatio: "3 / 4" }}
     >
-      <div
-        className="relative w-full overflow-hidden rounded-[32px]"
-        style={{ aspectRatio: "3 / 4" }}
-      >
+      <div className="absolute inset-0">
         <Image
           src={heroImage}
           alt={image.alt ?? title}
@@ -50,29 +48,25 @@ export function ProductCard({
           fill
           sizes="(max-width: 1024px) 100vw, 420px"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 space-y-2 p-5 text-white">
-          {badge ? (
-            <p className="text-[11px] uppercase tracking-[0.45em] text-[#f5e3c5]">
-              {badge}
-            </p>
-          ) : (
-            category && (
-              <p className="text-[11px] uppercase tracking-[0.45em] text-[#f5e3c5]">
-                {category}
-              </p>
-            )
-          )}
-          <h3 className="text-2xl leading-tight">{title}</h3>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/85 transition duration-500 group-hover:via-black/55 group-hover:to-black/90" />
       </div>
-      <div className="flex flex-1 flex-col justify-between space-y-4 px-6 py-6 text-[#4f3c27]">
-        <p className="text-sm leading-relaxed text-[#4f3c27]">{description}</p>
-        <div className="flex items-center justify-between text-sm font-semibold text-[var(--primary)]">
-          <span>{priceLabel}</span>
-          <span className="text-xs uppercase tracking-[0.35em] text-[#a78a6e]">
-            View ↗
-          </span>
+
+      <div className="relative z-10 flex h-full flex-col justify-between p-6 text-white">
+        {(badge || category) && (
+          <p className="inline-flex rounded-full border border-white/30 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-[#f5e3c5] md:text-[11px] md:tracking-[0.4em]">
+            {badge ?? category}
+          </p>
+        )}
+
+        <div className="space-y-3">
+          <p className="text-lg font-semibold leading-tight md:text-2xl">{title}</p>
+          <p className="hidden text-sm leading-relaxed text-white/85 md:block">{description}</p>
+          <div className="flex items-center justify-between text-sm font-semibold">
+            <span className="text-base md:text-lg">{priceLabel}</span>
+            <span className="text-[11px] uppercase tracking-[0.35em] text-white/80 md:text-xs md:tracking-[0.4em]">
+              View ↗
+            </span>
+          </div>
         </div>
       </div>
     </Link>

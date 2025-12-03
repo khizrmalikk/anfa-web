@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
 import { AudioWidget } from "@/components/audio-widget";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 const display = Playfair_Display({
   variable: "--font-display",
@@ -34,6 +35,11 @@ export const metadata: Metadata = {
     "Shopify storefront",
     "desert chic",
   ],
+  icons: {
+    icon: "/logo.webp",
+    shortcut: "/logo.webp",
+    apple: "/logo.webp",
+  },
 };
 
 export default function RootLayout({
@@ -58,6 +64,7 @@ export default function RootLayout({
           </div>
           <SiteHeader />
           <main>{children}</main>
+          <SiteFooter />
           <AudioWidget />
         </div>
       </body>

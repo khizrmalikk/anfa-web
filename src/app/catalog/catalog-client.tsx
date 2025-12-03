@@ -47,9 +47,9 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
     <div className="mx-auto max-w-6xl px-6 pb-12 pt-40 text-[var(--foreground)] md:px-10 lg:px-16">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-[#a78a6e]">Catalog</p>
-        <h1 className="text-4xl">Editorial product stories with hover film stills.</h1>
+        <h1 className="text-4xl">Objects of desire, styled three across.</h1>
         <p className="text-sm text-[#4f3c27]">
-          Data flows from Shopify via the Storefront API. Without credentials you&apos;re viewing our mock capsule.
+          Catalog pulls live from Shopify when credentials exist. Until configured, you&apos;re browsing our mock capsule.
         </p>
       </header>
 
@@ -102,7 +102,7 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
           </button>
         </div>
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-5 sm:gap-8 md:gap-10 lg:grid-cols-3">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

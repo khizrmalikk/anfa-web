@@ -79,6 +79,29 @@ const mockProducts: ShopifyProduct[] = [
       },
     ],
   },
+  {
+    id: "gid://shopify/Product/demo-look",
+    handle: "demo-look",
+    title: "Blondes & Brunettes Demo Gown",
+    description: "Hand-draped silk column with corseted waist and glass-bead fringe.",
+    price: 2480,
+    category: "Limited Capsule",
+    image: {
+      url: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
+      altText: "Blondes & Brunettes Demo Gown",
+    },
+    gallery: [
+      {
+        url: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        url: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
+  },
 ];
 
 async function storefrontFetch<T>(
