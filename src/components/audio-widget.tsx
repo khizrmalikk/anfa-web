@@ -240,19 +240,15 @@ export function AudioWidget() {
   }, [isPlaying, ready]);
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col items-end space-y-2 text-[var(--foreground)]">
-      <div className="pointer-events-auto flex items-center gap-4 rounded-full border border-[var(--border)] bg-white/95 px-5 py-2 shadow-2xl">
-        <div className="flex flex-col text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-          <span className="text-[var(--foreground)]">Audio</span>
-          <span className="text-[9px] tracking-[0.4em] text-[#a78a6e]">
-            {ready && isPlaying ? (isMuted ? "Muted" : "Playing") : "Starting"}
-          </span>
+    <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col items-end space-y-2 text-black">
+      <div className="pointer-events-auto flex items-center gap-4 rounded-full border border-black/10 bg-white/70 px-6 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.25)] backdrop-blur-2xl">
+        <div className="rounded-full border border-black/10 bg-white/80 px-3 py-2">
+          <SoundBars values={barHeights} />
         </div>
-        <SoundBars values={barHeights} />
         <button
           type="button"
           onClick={toggleMute}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--primary)]"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20 bg-white text-black transition hover:border-black hover:bg-white/90"
           disabled={!ready}
           aria-label={isMuted ? "Unmute audio" : "Mute audio"}
         >
@@ -268,7 +264,7 @@ function SoundBars({ values }: { values: number[] }) {
   return (
     <div className="sound-bars">
       {values.map((value, idx) => (
-        <span key={`bar-${idx}`} style={{ transform: `scaleY(${value})` }} />
+        <span key={`bar-${idx}`} style={{ transform: `scaleY(${value})`, backgroundColor: "#000" }} />
       ))}
     </div>
   );

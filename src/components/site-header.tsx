@@ -53,16 +53,17 @@ export function SiteHeader() {
   const formatPrice = (value: number) => `${value.toLocaleString("en-US")} AED`;
 
   const navBodyClasses = cn(
+    "group px-10 transition-all duration-500 rounded-full border",
     isHome
-      ? "group pl-6 pr-4 text-white transition-all duration-500 data-[visible=true]:border data-[visible=true]:border-white/15 data-[visible=true]:bg-white/20 data-[visible=true]:text-[var(--foreground)] data-[visible=true]:backdrop-blur-lg data-[visible=false]:bg-transparent"
-      : "group pl-6 pr-4 text-[var(--foreground)] border border-[var(--border)]/70 bg-white/95",
+      ? "text-white border-transparent data-[visible=false]:bg-transparent data-[visible=true]:border-white/20 data-[visible=true]:bg-white/10 data-[visible=true]:text-[var(--foreground)] data-[visible=true]:backdrop-blur-2xl"
+      : "text-[var(--foreground)] border-white/40 bg-white/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(15,9,3,0.15)]",
   );
 
   const mobileNavClasses = cn(
-    "px-4 py-3 transition-all duration-500",
+    "px-7 py-4 transition-all duration-500 rounded-3xl border backdrop-blur-2xl",
     isHome
-      ? "group text-white data-[visible=true]:border data-[visible=true]:border-[var(--border)]/70 data-[visible=true]:bg-white/90 data-[visible=true]:text-[var(--foreground)]"
-      : "group border border-[var(--border)]/70 bg-white/95 text-[var(--foreground)]",
+      ? "group text-white border-transparent bg-transparent data-[visible=true]:border-white/20 data-[visible=true]:bg-white/15 data-[visible=true]:text-[var(--foreground)]"
+      : "group border-white/40 bg-white/85 text-[var(--foreground)]",
   );
 
   const locationTextClasses = cn(
@@ -80,7 +81,7 @@ export function SiteHeader() {
   const mobileBagButtonClasses = cn(
     "group relative flex h-10 w-10 items-center justify-center rounded-full border transition-colors",
     isHome
-      ? "border-white/60 bg-white/10 text-white group-data-[visible=true]:border-[var(--border)] group-data-[visible=true]:bg-white group-data-[visible=true]:text-[var(--primary)]"
+      ? "border-white/60 bg-white/10 text-white group-data-[visible=true]:border-white/60 group-data-[visible=true]:bg-transparent group-data-[visible=true]:text-white"
       : "border-[var(--border)] bg-white text-[var(--primary)]",
   );
 
@@ -93,13 +94,20 @@ export function SiteHeader() {
     <Navbar className="top-[40px] px-4">
       <NavBody className={navBodyClasses}>
         <Link href="/" className="flex items-center gap-4 text-current">
-          <Image src="/logo.webp" alt="Anfa logo" width={60} height={60} className="h-15 w-15 object-contain" priority />
+          <Image src="/logo.webp" alt="Anfa logo" width={60} height={60} className="h-16 w-16 object-contain" priority />
           <div className="leading-tight">
             <p className="text-sm uppercase tracking-[0.4em]">Anfa Label</p>
             <p className={locationTextClasses}>Dubai</p>
           </div>
         </Link>
-        <NavItems items={navItems} onItemClick={handleNavClick} className="text-current" />
+        <NavItems
+          items={navItems}
+          onItemClick={handleNavClick}
+          className={cn(
+            "text-current",
+            isHome ? "text-white group-data-[visible=true]:text-[var(--foreground)]" : "text-[var(--foreground)]",
+          )}
+        />
         <div className="ml-auto flex items-center gap-3">
           <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
@@ -122,38 +130,71 @@ export function SiteHeader() {
               id={popoverContentId}
               align="end"
               className={cn(
-                "w-80 space-y-4 rounded-[28px] border border-[var(--border)] bg-white/95 text-sm text-[var(--foreground)] shadow-[0_24px_80px_rgba(15,9,3,0.15)] backdrop-blur-xl",
-                isHome && "text-[var(--foreground)]",
+                "w-80 space-y-4 rounded-2xl border text-sm shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl",
+                isHome
+                  ? "border-white/25 bg-[#050505]/85 text-white"
+                  : "border-white/30 bg-white/95 text-[var(--foreground)]",
               )}
             >
-              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-[#a78a6e]">
+              <div
+                className={cn(
+                  "flex items-center justify-between text-[11px] uppercase tracking-[0.35em]",
+                  isHome ? "text-white/70" : "text-[#a78a6e]",
+                )}
+              >
                 <span>Bag Preview</span>
-                <span>{bagCount} {bagCount === 1 ? "item" : "items"}</span>
+                <span>
+                  {bagCount} {bagCount === 1 ? "item" : "items"}
+                </span>
               </div>
               {bagCount ? (
                 <div className="space-y-3">
                   {bagItems.map((item) => (
-                    <div key={item.id} className="rounded-2xl bg-[#fefbf6] p-4">
-                      <div className="flex items-center justify-between text-sm font-semibold text-[var(--primary)]">
+                    <div
+                      key={item.id}
+                      className={cn(
+                        "rounded-2xl p-4",
+                        isHome ? "bg-white/10 text-white" : "bg-[#fefbf6] text-[var(--primary)]",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "flex items-center justify-between text-sm font-semibold",
+                          isHome ? "text-white" : "text-[var(--primary)]",
+                        )}
+                      >
                         <span>{item.name}</span>
                         <span>{formatPrice(item.price)}</span>
                       </div>
-                      <p className="mt-1 text-xs text-[#6b4d2f]">{item.detail}</p>
+                      <p className={cn("mt-1 text-xs", isHome ? "text-white/70" : "text-[#6b4d2f]")}>{item.detail}</p>
                     </div>
                   ))}
-                  <div className="flex items-center justify-between border-t border-[var(--border)] pt-3 text-xs uppercase tracking-[0.3em] text-[#a78a6e]">
+                  <div
+                    className={cn(
+                      "flex items-center justify-between border-t pt-3 text-xs uppercase tracking-[0.3em]",
+                      isHome ? "border-white/20 text-white/70" : "border-[var(--border)] text-[#a78a6e]",
+                    )}
+                  >
                     <span>Subtotal</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
                 </div>
               ) : (
-                <p className="rounded-2xl border border-dashed border-[var(--border)] p-4 text-center text-xs text-[#6b4d2f]">
+                <p
+                  className={cn(
+                    "rounded-2xl border border-dashed p-4 text-center text-xs",
+                    isHome ? "border-white/30 text-white/70" : "border-[var(--border)] text-[#6b4d2f]",
+                  )}
+                >
                   Your bag is empty.
                 </p>
               )}
               <Link
                 href="/bag"
-                className="block text-center text-xs uppercase tracking-[0.35em] text-[var(--primary)] underline underline-offset-4"
+                className={cn(
+                  "block text-center text-xs uppercase tracking-[0.35em] underline underline-offset-4",
+                  isHome ? "text-white" : "text-[var(--primary)]",
+                )}
               >
                 View full bag
               </Link>
@@ -164,7 +205,7 @@ export function SiteHeader() {
       <MobileNav className={mobileNavClasses}>
         <MobileNavHeader>
           <Link href="/" className="flex items-center gap-3 text-current">
-            <Image src="/logo.webp" alt="Anfa logo" width={44} height={44} className="h-11 w-11 object-contain" priority />
+            <Image src="/logo.webp" alt="Anfa logo" width={48} height={48} className="h-12 w-12 object-contain" priority />
             <span className="text-xs uppercase tracking-[0.35em]">Anfa</span>
           </Link>
           <div className="flex items-center gap-3">
@@ -191,12 +232,23 @@ export function SiteHeader() {
             />
           </div>
         </MobileNavHeader>
-        <MobileNavMenu isOpen={mobileOpen} className="gap-2">
+        <MobileNavMenu
+          isOpen={mobileOpen}
+          className={cn(
+            "gap-3 rounded-3xl border border-white/20 bg-white/10 px-6 py-6 text-white backdrop-blur-2xl",
+            !isHome && "text-[var(--foreground)] border-white/30 bg-white/90 text-[var(--foreground)]",
+          )}
+        >
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.link}
-              className="w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm uppercase tracking-[0.35em] text-current"
+              className={cn(
+                "w-full rounded-2xl border px-4 py-3 text-sm uppercase tracking-[0.35em]",
+                isHome
+                  ? "border-white/30 text-white transition hover:border-white hover:bg-white/10"
+                  : "border-[var(--border)] text-[var(--foreground)]",
+              )}
               onClick={handleNavClick}
             >
               {item.name}
